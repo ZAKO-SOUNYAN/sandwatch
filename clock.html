@@ -13,31 +13,42 @@
     :root { --bg: #f5f5f5; --fg: #111111; --fg50: rgba(0,0,0,0.35); }
   }
   body {
-    background: var(--bg);
+    
     display: flex; align-items: center; justify-content: center;
     min-height: 100vh;
     font-family: 'Hiragino Kaku Gothic ProN','Yu Gothic UI','Meiryo',sans-serif;
     overflow: hidden;
   }
   .container {
-    display: flex; align-items: flex-start; gap: 1.6rem;
+    display: flex; align-items: flex-start; gap: 1.28rem;
   }
-  #hg-wrap { width: 48px; flex-shrink: 0; }
+  #hg-wrap { width: 38px; flex-shrink: 0; }
   #hg-svg  { display: block; width: 100%; transform-origin: 50% 50%; }
 
   .clock-block { display: flex; flex-direction: column; }
   .time-row { display: flex; align-items: baseline; line-height: 1; }
   .digit, .colon {
-    font-size: clamp(2rem, 6.5vw, 3.4rem);
-    font-weight: 300; color: var(--fg);
-    font-variant-numeric: tabular-nums; letter-spacing: -0.01em;
+    font-size: clamp(1.6rem, 5.2vw, 2.72rem);
+    font-weight: 400; color: var(--fg);
+    font-family: 'SF Mono', 'Fira Mono', 'Consolas', 'Courier New', monospace;
+    font-variant-numeric: tabular-nums;
+    letter-spacing: 0;
   }
-  .colon { margin: 0 3px; }
+  /* 各2桁ブロックを固定幅に — ブレ完全防止 */
+  .digit {
+    display: inline-block;
+    width: 2.4ch;
+    text-align: center;
+  }
+  .colon { margin: 0 2px; }
   .date-row {
     margin-top: 0.3em;
     font-weight: 300;
-    font-size: clamp(0.67rem, 2.17vw, 1.13rem);
-    letter-spacing: 0.15em; color: var(--fg50); line-height: 1;
+    font-size: clamp(0.8rem, 2.6vw, 1.36rem);
+    letter-spacing: 0.15em;
+    color: var(--fg);
+    opacity: 0.7;
+    line-height: 1;
   }
 </style>
 </head>
@@ -209,6 +220,7 @@ function syncSize() {
   const h = clockBlock.getBoundingClientRect().height;
   hgWrap.style.height = h + 'px';
   hgSvg.setAttribute('height', h);
+
 }
 
 let isFlipping = false;
@@ -239,8 +251,7 @@ function tick() {
   document.getElementById('ss').textContent = pad(s);
   const wd = DAYS[now.getDay()];
   document.getElementById('date').textContent =
-    now.getFullYear() + '.' + pad(now.getMonth()+1) + '.' + pad(now.getDate())
-    + '  ' + wd + '曜日';
+    now.getFullYear() + '.' + pad(now.getMonth()+1) + '.' + pad(now.getDate()) + '  ' + wd + '曜日';
   if (!isFlipping) updateHourglass(s);
   if (lastSec === 59 && s === 0) flip();
   lastSec = s;
